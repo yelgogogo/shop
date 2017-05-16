@@ -4,14 +4,15 @@ import Slider from 'react-slick';
 import { connect } from 'dva';
 import { Icon,Card,Layout,Button  } from 'antd';
 import { doDiscount } from '../constants';
+import { Link } from 'dva/router';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-function Good({imgUrl,price,discount,sold,stock}) {
+function Good({dispatch,imgUrl,price,discount,sold,stock,detail,likes,likeFlag}) {
   const settings = {
       dots: true,
       infinite: true,
-      speed: 2000,
+      speed: 500,
       autoplaySpeed:10000,
       slidesToShow: 1,
       adaptiveHeight: true,
@@ -19,6 +20,16 @@ function Good({imgUrl,price,discount,sold,stock}) {
       slidesToScroll: 1,
       pauseOnHover:true,
     };
+
+  function addLike() {
+    console.log(likes,likeFlag);
+    dispatch({
+      type: 'good/addLike',
+      payload: {
+        likes
+      },
+    });
+  }
 
 
   return (
@@ -35,12 +46,14 @@ function Good({imgUrl,price,discount,sold,stock}) {
         </Slider>
       </Content>
       <div>
-      <Button type="primary">我要买</Button>
-      <Button>Default</Button>
+        {detail}
       </div>
+      <Icon type="like" />{likes?likes.length:0}
       <Footer style={{  padding:'5px',position: 'fixed', width: '100%',bottom:'0',display:'flex' }}>
         <span style={{  width: '40%'  }}>
-        留言，点赞
+          <Link to="/shop"><Icon type="left" /></Link>
+          <Button shape="circle" icon="message" />
+          {likeFlag?<Button shape="circle" icon="like" onClick={addLike}/>:<Button shape="circle" icon="like-o" onClick={addLike}/>}
         </span>
         <span style={{ width: '30%'  }}>
           <ul>
@@ -59,10 +72,10 @@ function Good({imgUrl,price,discount,sold,stock}) {
 }
 
 function mapStateToProps(state) {
-  const { id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,stock, } = state.good;
+  const { id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,stock,likes,likeFlag } = state.good;
   return {
     // loading: state.loading.models.users,
-    id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,stock
+    id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,stock,likes,likeFlag
   };
 }
 

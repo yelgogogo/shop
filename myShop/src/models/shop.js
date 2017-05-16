@@ -2,15 +2,15 @@
 export default {
   namespace: 'shop',
   state: {
-	shop: {},
-	categorys: [],
-	items:[],
-	goods: [],
-	select:{
-	  categoryId:0,
-	  itemId:0,
-	},
-
+  	shop: {},
+  	categorys: [],
+  	items:[],
+  	goods: [],
+  	select:{
+  	  categoryId:0,
+  	  itemId:0,
+  	},
+    collapsed: false,
   },
   reducers: {
   	save(state, { payload: { data: {shop, categorys,goods,items} } }) {
@@ -18,6 +18,10 @@ export default {
     },
     selectCategory(state, { payload: { select} } ) {
       return { ...state, select};
+    },
+    toggleMenu(state, { payload: { collapsed=false} } ) {
+      collapsed=!collapsed;
+      return { ...state, collapsed};
     },
   },
   effects: {

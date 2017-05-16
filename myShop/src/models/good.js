@@ -16,11 +16,16 @@ export default {
 	unit: null,
 	name: null,
 	discount: 0,
-	onSale: false
+	onSale: false,
+  likes:[],
+  likeFlag:false,
   },
   reducers: {
-  	save(state, { payload: { data: {id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale } }}) {
-      return { ...state, id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale};
+  	save(state, { payload: { data: {id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,likes,likeFlag } }}) {
+      return { ...state, id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,likes,likeFlag};
+    },
+    saveLike(state, { payload: { data: {likes,likeFlag } }}) {
+      return { ...state, likes,likeFlag};
     },
   },
   effects: {
@@ -31,6 +36,20 @@ export default {
       	);
       yield put({
         type: 'save',
+        payload: {
+          data,
+          // total: parseInt(headers['x-total-count'], 10),
+          // page: parseInt(page, 10),
+        },
+      });
+    },
+    *addLike({ payload: { likes } }, { call, put }) {
+      // const { data, headers } = yield call(usersService.fetch, { page });
+
+      const data = JSON.parse(
+        '{"likes":[1],"likeFlag":true}');
+      yield put({
+        type: 'saveLike',
         payload: {
           data,
           // total: parseInt(headers['x-total-count'], 10),
