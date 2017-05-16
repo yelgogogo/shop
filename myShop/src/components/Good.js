@@ -2,27 +2,26 @@ import React from 'react';
 import styles from './Good.css';
 import Slider from 'react-slick';
 import { connect } from 'dva';
-import { Icon,Card,Layout,Button  } from 'antd';
+import { Icon,Card,Layout,Button,Affix,Badge  } from 'antd';
 import { doDiscount } from '../constants';
 import { Link } from 'dva/router';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-function Good({dispatch,imgUrl,price,discount,sold,stock,detail,likes,likeFlag}) {
+function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount,discountPrice,sold,stock,detail,likes,likeFlag,totalCount,goods}) {
   const settings = {
       dots: true,
       infinite: true,
       speed: 500,
       autoplaySpeed:10000,
       slidesToShow: 1,
-      adaptiveHeight: true,
+      adaptiveHeight: false,
       autoplay:true,
       slidesToScroll: 1,
       pauseOnHover:true,
     };
 
   function addLike() {
-    console.log(likes,likeFlag);
     dispatch({
       type: 'good/addLike',
       payload: {
@@ -31,9 +30,20 @@ function Good({dispatch,imgUrl,price,discount,sold,stock,detail,likes,likeFlag})
     });
   }
 
+  function addCart(addGood) {
+    const count=1;
+    goods.push({...addGood,count:count});
+    dispatch({
+      type: 'cart/saveGoods',
+      payload: {
+        data:{goods},
+      },
+    });
+  }
 
   return (
     <Layout >
+      
       <Content>
         <Slider {...settings}>
           
@@ -48,9 +58,17 @@ function Good({dispatch,imgUrl,price,discount,sold,stock,detail,likes,likeFlag})
       <div>
         {detail}
       </div>
+      <Affix style={{ position: 'absolute', top: 20, right: 20}}>
+        
+        <Badge count={totalCount} style={{ backgroundColor: '#87d068' }}>
+          <Link to="/cart">
+            <Button type="primary" shape="circle" icon="shopping-cart" style={{ width:'40px',height:'40px'}}></Button>
+          </Link>
+        </Badge>
+      </Affix>
       <Icon type="like" />{likes?likes.length:0}
       <Footer style={{  padding:'5px',position: 'fixed', width: '100%',bottom:'0',display:'flex' }}>
-        <span style={{  width: '40%'  }}>
+        <span style={{  width: '30%'  }}>
           <Link to="/shop"><Icon type="left" /></Link>
           <Button shape="circle" icon="message" />
           {likeFlag?<Button shape="circle" icon="like" onClick={addLike}/>:<Button shape="circle" icon="like-o" onClick={addLike}/>}
@@ -62,8 +80,8 @@ function Good({dispatch,imgUrl,price,discount,sold,stock,detail,likes,likeFlag})
               </ul>
         </span>
         
-        <span style={{ width: '30%'   }}>
-
+        <span style={{ width: '40%'   }}>
+        <Button icon="shopping-cart" onClick={addCart.bind(null,{id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount})}>+</Button>
         <Button type="primary">我要买</Button>
         </span>
       </Footer>
@@ -72,10 +90,11 @@ function Good({dispatch,imgUrl,price,discount,sold,stock,detail,likes,likeFlag})
 }
 
 function mapStateToProps(state) {
-  const { id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,stock,likes,likeFlag } = state.good;
+  const { id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,discountPrice,onSale,stock,likes,likeFlag } = state.good;
+  const {totalCount,goods} = state.cart;
   return {
     // loading: state.loading.models.users,
-    id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,stock,likes,likeFlag
+    totalCount,goods,id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,discountPrice,onSale,stock,likes,likeFlag
   };
 }
 

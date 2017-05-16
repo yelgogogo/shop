@@ -6,6 +6,8 @@ const app = dva();
 
 app.model(require("./models/shop"));
 
+app.model(require("./models/cart"));
+
 app.model(require("./models/good"));
 
 // 2. Plugins

@@ -16,13 +16,14 @@ export default {
 	unit: null,
 	name: null,
 	discount: 0,
+  discountPrice:0,
 	onSale: false,
   likes:[],
   likeFlag:false,
   },
   reducers: {
-  	save(state, { payload: { data: {id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,likes,likeFlag } }}) {
-      return { ...state, id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,onSale,likes,likeFlag};
+  	save(state, { payload: { data: {id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,discountPrice,onSale,likes,likeFlag } }}) {
+      return { ...state, id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,discountPrice,onSale,likes,likeFlag};
     },
     saveLike(state, { payload: { data: {likes,likeFlag } }}) {
       return { ...state, likes,likeFlag};
