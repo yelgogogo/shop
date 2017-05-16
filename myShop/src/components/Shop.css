@@ -1,0 +1,20 @@
+
+.normal {
+}
+.sider {
+ 	overflow: 'auto';
+ 	margin: 0;
+}
+
+.custom-image{
+  display: block;
+}
+
+.menu {
+ 	width: 100%;
+ 	margin: 0;
+}
+.card {
+ 	width: 75%;
+ 	margin: 0;
+}
