@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './Shop.css';
 import { connect } from 'dva';
-import { Menu,Icon,Card,Layout,Row, Col } from 'antd';
+import { Menu,Icon,Card,Layout,Row, Col,Affix,Badge,Button } from 'antd';
 import { doDiscount } from '../constants';
 import { Link } from 'dva/router';
 
@@ -10,7 +10,7 @@ const { Header, Footer, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
-function Shop({dispatch,shop, categorys, goods,items,select,collapsed}) {
+function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount}) {
   const handleClick = (e) => {
   	dispatch({
       type: 'shop/selectCategory',
@@ -89,9 +89,10 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed}) {
         <Row>
           {
             goods.map(function (good) {
+              const linkPath="/good/"+good.id;
             return (good.onSale&&good.shopId===shop.id&&good.itemId===select.itemId)?
             <Col span={12} key={good.id}>
-              <Link to="/good">
+              <Link to={linkPath}>
               <Card bodyStyle={{ padding: 0 }} onClick={toggle}>
                 <div className="custom-image">
                   <img className="custom-image2" height={collapsed ? '180vh' : '120vh'} alt="example" width="100%" src={good.imgUrl[0]} />
@@ -111,6 +112,14 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed}) {
       </Row>
         
       </Content>
+      <Affix style={{ position: 'absolute', top: 40, right: 20}}>
+        
+        <Badge count={totalCount} style={{ backgroundColor: '#87d068' }}>
+          <Link to="/cart">
+            <Button type="primary" shape="circle" icon="shopping-cart" style={{ width:'40px',height:'40px'}}></Button>
+          </Link>
+        </Badge>
+      </Affix>
         </Layout>
     </Layout>
     
@@ -119,6 +128,7 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed}) {
 
 function mapStateToProps(state) {
   const { shop, categorys, goods,items,select,collapsed } = state.shop;
+  const {totalCount} = state.cart;
   return {
     // loading: state.loading.models.users,
     shop,
@@ -126,6 +136,7 @@ function mapStateToProps(state) {
     categorys,
     items,
     goods,
+    totalCount,
     collapsed,
   };
 }

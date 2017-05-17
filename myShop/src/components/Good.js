@@ -32,7 +32,18 @@ function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,disco
 
   function addCart(addGood) {
     const count=1;
-    goods.push({...addGood,count:count});
+    console.log(goods,addGood);
+    if (goods.find(f=>f.id===addGood.id))
+    {
+      goods=goods.map(g=>
+        g.id===addGood.id?{...g,count:(g.count+count)}:g
+      );
+    
+    }else{
+      goods.push({...addGood,count:count});
+    }
+    console.log(goods);
+    // goods.push({...addGood,count:count});
     dispatch({
       type: 'cart/saveGoods',
       payload: {
@@ -81,7 +92,7 @@ function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,disco
         </span>
         
         <span style={{ width: '40%'   }}>
-        <Button icon="shopping-cart" onClick={addCart.bind(null,{id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount})}>+</Button>
+        <Button icon="shopping-cart" onClick={addCart.bind(null,{id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount,discountPrice})}>+</Button>
         <Button type="primary">我要买</Button>
         </span>
       </Footer>

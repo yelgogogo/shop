@@ -13,7 +13,7 @@ function RouterConfig({ history }) {
     <Router history={history}>
       <Route path="/" component={Shop} />
       <Route path="/shop" component={Shop} />
-      <Route path="/good" component={Good} />
+      <Route path="/good/:id" component={Good} />
       <Route path="/cart" component={Cart} />
     </Router>
   );
