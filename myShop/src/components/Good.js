@@ -42,8 +42,6 @@ function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,disco
     }else{
       goods.push({...addGood,count:count});
     }
-    console.log(goods);
-    // goods.push({...addGood,count:count});
     dispatch({
       type: 'cart/saveGoods',
       payload: {
@@ -51,6 +49,16 @@ function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,disco
       },
     });
   }
+
+
+  function buyGood(functionIn,addGood){
+    functionIn(addGood);
+
+  }
+
+
+  const shopLink=`/shop/${shopId}`;
+  const cartLink=`/cart`;
 
   return (
     <Layout >
@@ -80,7 +88,7 @@ function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,disco
       <Icon type="like" />{likes?likes.length:0}
       <Footer style={{  padding:'5px',position: 'fixed', width: '100%',bottom:'0',display:'flex' }}>
         <span style={{  width: '30%'  }}>
-          <Link to="/shop"><Icon type="left" /></Link>
+          <Link to={shopLink}><Icon type="left" /></Link>
           <Button shape="circle" icon="message" />
           {likeFlag?<Button shape="circle" icon="like" onClick={addLike}/>:<Button shape="circle" icon="like-o" onClick={addLike}/>}
         </span>
@@ -92,8 +100,8 @@ function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,disco
         </span>
         
         <span style={{ width: '40%'   }}>
-        <Button icon="shopping-cart" onClick={addCart.bind(null,{id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount,discountPrice})}>+</Button>
-        <Button type="primary">我要买</Button>
+        <Button icon="shopping-cart" onClick={addCart.bind(null,{id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount,discountPrice,detail})}>+</Button>
+        <Link to={cartLink}><Button type="primary" onClick={buyGood.bind(null,addCart,{id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount,discountPrice,detail})}>我要买</Button></Link>
         </span>
       </Footer>
     </Layout>
