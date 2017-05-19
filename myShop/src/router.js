@@ -8,6 +8,10 @@ import Good from "./routes/Good.js";
 
 import Cart from "./routes/Cart.js";
 
+import Order from "./routes/Order.js";
+
+import Basket from "./routes/Basket.js";
+
 function RouterConfig({ history }) {
   return (
     <Router history={history}>
@@ -15,6 +19,8 @@ function RouterConfig({ history }) {
       <Route path="/shop/:id" component={Shop} />
       <Route path="/good/:id" component={Good} />
       <Route path="/cart" component={Cart} />
+      <Route path="/order" component={Order} />
+      <Route path="/basket" component={Basket} />
     </Router>
   );
 }

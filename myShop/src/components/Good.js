@@ -8,7 +8,10 @@ import { Link } from 'dva/router';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount,discountPrice,sold,stock,detail,likes,likeFlag,totalCount,goods}) {
+function Good({dispatch,info,likes,likeFlag,totalCount,goods}) {
+  console.log(info);
+  const {id,shopId,itemId,categoryId,imgUrl,price,unit,name,discount,discountPrice,sold,stock,detail} = info;
+  console.log({imgUrl});
   const settings = {
       dots: true,
       infinite: true,
@@ -109,11 +112,11 @@ function Good({dispatch,id,shopId,itemId,categoryId,imgUrl,price,unit,name,disco
 }
 
 function mapStateToProps(state) {
-  const { id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,discountPrice,onSale,stock,likes,likeFlag } = state.good;
+  const { info,likes,likeFlag } = state.good;
   const {totalCount,goods} = state.cart;
   return {
     // loading: state.loading.models.users,
-    totalCount,goods,id, shopId,itemId,categoryId,detail,imgUrl,price,cost,sold,unit,name,discount,discountPrice,onSale,stock,likes,likeFlag
+    info,totalCount,goods,likes,likeFlag
   };
 }
 
