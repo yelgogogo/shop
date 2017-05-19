@@ -1,0 +1,24 @@
+
+.normal {
+}
+
+.customImage{
+	height: 60px;
+	width: 60px;
+}
+
+.goodInfo{
+	display: flex;
+	align-items: flex-start;
+}
+
+.goodSpan{
+	width:80%;
+	padding: 5px 10px;
+	text-align: top;
+}
+
+.footer{
+	position: fixed;
+	bottom: 0;
+}
