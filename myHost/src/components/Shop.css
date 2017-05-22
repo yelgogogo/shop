@@ -1,0 +1,54 @@
+
+.normal {
+}
+.sider {
+ 	overflow: 'auto';
+ 	margin: 0;
+}
+
+.custom-image{
+  display: block;
+}
+
+.menu {
+ 	width: 100%;
+ 	margin: 0;
+}
+.card {
+ 	width: 75%;
+ 	margin: 0;
+}
+
+.verticalCenterModal {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.verticalCenterModal:before {
+  content: '';
+  display: inline-block;
+
+  vertical-align: middle;
+  width: 0;
+}
+
+.verticalCenterModal .ant-modal {
+  display: inline-block;
+  vertical-align: middle;
+  top: 0;
+  bottom: 0;
+  text-align: left;
+}
+
+/*
+// Use flex which not working in IE
+.verticalCenterModal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verticalCenterModal .ant-modal {
+  top: 0;
+}
+*/

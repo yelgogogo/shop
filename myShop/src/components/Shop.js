@@ -93,7 +93,7 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
             return (good.onSale&&good.shopId===shop.id&&good.itemId===select.itemId)?
             <Col span={12} key={good.id}>
               <Link to={linkPath}>
-              <Card bodyStyle={{ padding: 0 }} onClick={toggle}>
+              <Card bodyStyle={{ padding: 0 }} >
                 <div className="custom-image">
                   <img className="custom-image2" height={collapsed ? '180vh' : '120vh'} alt="example" width="100%" src={good.imgUrl[0]} />
                 </div>
