@@ -80,6 +80,7 @@ function Cart({dispatch,goods,totalPrice,payMode}) {
     switch (key){
       case 'basket' :
         dispatch({ type: 'basket/fetch', payload: {} });
+        break; 
     }
   }
 

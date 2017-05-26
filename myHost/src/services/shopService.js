@@ -26,16 +26,10 @@ export function loadAll({shop,categorys,items,goods}) {
   });
 }
 
-// export function get({obj}) {
-//   console.log('get');
-//   console.log(obj);
-//   console.log(data);
-//   return request(`${HOST}shopdata`, {
-//     method: 'POST',
-//     body: JSON.stringify(obj),
-//     headers :{'Content-Type': 'application/json'},
-//   });
-// }
+export function get({id,type}) {
+  console.log('get');
+  return request(`${HOST}shopdata?id=${id}&dbname=${type}`);
+}
 
 export function add({action}) {
   console.log('add');

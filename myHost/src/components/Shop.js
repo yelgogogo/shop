@@ -175,7 +175,7 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
         action:{
           operCode:operCodeIn,
           type:typeIn,
-          values:{...values,shopId:shop.id},
+          values:{...values,shopId:shop.id,shopName:shop.shopName},
         },
       },
     });

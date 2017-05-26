@@ -67,7 +67,7 @@ function Good({dispatch,info,likes,likeFlag,totalCount,goods}) {
     <Layout >
       
       <Content>
-        <Slider {...settings}>
+        {imgUrl.length > 0 ? <Slider {...settings}>
           
           {
       			imgUrl.map(function (imgsrc,i) {
@@ -75,7 +75,7 @@ function Good({dispatch,info,likes,likeFlag,totalCount,goods}) {
       		  })
     		  }
 
-        </Slider>
+        </Slider>:null}
       </Content>
       <div>
         {detail}
