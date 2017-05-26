@@ -16,6 +16,7 @@
     "dva": "^1.2.1",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
+    "react-dragula": "^1.1.17",
     "react-slick": "^0.14.11",
     "slick-carousel": "^1.6.0"
   },

@@ -1,9 +1,12 @@
 import React from 'react';
 import styles from './Shop.css';
 import { connect } from 'dva';
-import { Menu,Icon,Card,Layout,Row, Col,Affix,Badge,Button,Modal,Input,Radio } from 'antd';
+import { Menu,Icon,Card,Layout,Row, Col,Affix,Badge,Button,Modal,Input,Radio,Form } from 'antd';
 import { doDiscount } from '../constants';
 import { Link } from 'dva/router';
+import GoodModal from './GoodModal';
+
+// import dragula  from 'react-dragula';
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -13,13 +16,14 @@ const MenuItemGroup = Menu.ItemGroup;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount,action,modal2Visible,modal1Visible,modal2ErrMsg,modal1ErrMsg}) {
+function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount,action,modal1Visible,modal2Visible,modal3Visible,modal2ErrMsg,modal1ErrMsg}) {
   const handleClick = (e) => {
+    const x=1;
   	dispatch({
       type: 'shop/selectCategory',
       payload: {
       	select:{
-		  // categoryId:parseInt(e.key),
+		      categoryId:parseInt(e.keyPath[1]),
 		      itemId:parseInt(e.key),
 		    },
       },
@@ -39,32 +43,50 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
   }
 
   //add
-  function setModal2Visible(modal2Visible,action,typeIn,obj) {
-    dispatch({
-      type: 'shop/setModal2Visible',
-      payload: {
-        modal2Visible:modal2Visible,
-      },
-    });
-
+  function setModal2Visible(visible,action,typeIn,obj) {
+    
+    console.log(visible,action,typeIn,obj);
     let setValues={};
+    let payloaddata={};
     switch(typeIn){
       case 'categorys':
         setValues = {
           shopId:shop.id,
           sequence:categorys.length+1,
           name:'',
-        }
+        };
+        payloaddata={
+          modal2Visible:visible,
+        };
         break;
       case 'items':
         setValues = {
           shopId:shop.id,
-          sequence:categorys.length+1,
+          sequence:items.length+1,
           name:'',
           categoryId:obj.id,
         }
+        payloaddata={
+          modal2Visible:visible,
+        };
+        break;
+      case 'goods':
+        setValues = {
+          shopId:shop.id,
+          sequence:items.length+1,
+          name:'',
+          categoryId:obj.id,
+        }
+        payloaddata={
+          modal3Visible:visible,
+        };
         break;
     }
+
+    dispatch({
+      type: 'shop/setModal2Visible',
+      payload: payloaddata,
+    });
 
     dispatch({
       type: 'shop/saveAction',
@@ -141,9 +163,39 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
     });
   }
 
+  const FormItem = Form.Item;
+  const record={};
+
+  function editHandler(typeIn,operCodeIn,action,values) {
+    console.log(typeIn,action,values);
+    console.log({...values,shopId:shop.id});
+    dispatch({
+      type: 'shop/saveAction',
+      payload: {
+        action:{
+          operCode:operCodeIn,
+          type:typeIn,
+          values:{...values,shopId:shop.id},
+        },
+      },
+    });
+    console.log(action);
+    dispatch({
+      type: `shop/${operCodeIn}`,
+      payload: {
+        action
+      },
+    });
+  }
+
+  function enterGoodModal(e){
+    e.preventDefault(); 
+  }
+
   return (
     <Layout>
-         <Modal
+         
+        <Modal
           title="增加分类"
           wrapClassName={styles.verticalCenterModal}
           visible={modal2Visible}
@@ -188,10 +240,10 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
             {
               categorys.map(function (category,i) {
                   console.log(items);
-                  return (category.shopId===shop.id)?<SubMenu key={i} title={<span><Button type="dashed" shape="circle" icon="edit" onClick={setModal1Visible.bind(null,true,action,'categorys',category)}></Button>{category.name}</span> }>
+                  return (category.shopId===shop.id)?<SubMenu key={category.id} title={<span><Button type="dashed" shape="circle" icon="edit" onClick={setModal1Visible.bind(null,true,action,'categorys',category)}></Button>{category.name}</span> }>
                     { 
                       items.map(function (item) {
-                    return (item.shopId===shop.id&&item.categoryId===category.id)?<Menu.Item key={item.id}><Button type="dashed" shape="circle" icon="edit" onClick={setModal1Visible.bind(null,true,action,'items',item)}></Button>{item.name}</Menu.Item>:null  
+                    return (item.shopId===shop.id&&item.categoryId===category.id)?<Menu.Item key={category.id,item.id}><Button type="dashed" shape="circle" icon="edit" onClick={setModal1Visible.bind(null,true,action,'items',item)}></Button>{item.name}</Menu.Item>:null  
                     })
                     }
                     <Menu.Item key={category.id}><Button onClick={setModal2Visible.bind(null,true,action,'items',category)}>增加种类</Button></Menu.Item>
@@ -212,13 +264,26 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
           </Header>
           <Content>
         <Row>
+          <Col span={12} >
+              <Card bodyStyle={{ padding: 0 ,height:'27vh'}} onClick={setModal2Visible.bind(null,true,action,'goods',{itemId:select.itemId,shopId:shop.id,categoryId:select.categoryId,shopName:shop.shopName})}>
+                
+                <GoodModal record={{itemId:select.itemId,shopId:shop.id,categoryId:select.categoryId,shopName:shop.shopName,imgUrl:[]}} onOk={editHandler.bind(null,'goods','add',action)}>
+                  <Button>增加商品</Button>
+                </GoodModal>
+              </Card>
+          </Col>
           {
             goods.map(function (good) {
+              console.log(good);
+              console.log(good.onSale,good.shopId,shop.id,good.itemId,select.itemId);
               const linkPath="/good/"+good.id;
             return (good.onSale&&good.shopId===shop.id&&good.itemId===select.itemId)?
             <Col span={12} key={good.id}>
               <Link to={linkPath}>
               <Card bodyStyle={{ padding: 0 }} >
+                <GoodModal record={good} onOk={editHandler.bind(null,'goods','modify',action)}>
+                  <Button onClick={enterGoodModal}>编辑商品</Button>
+                </GoodModal>
                 <div className="custom-image">
                   <img className="custom-image2" height={collapsed ? '180vh' : '120vh'} alt="example" width="100%" src={good.imgUrl[0]} />
                 </div>
@@ -231,6 +296,7 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
                 </div>
               </Card>
               </Link>
+              
             </Col>:null  
           })
           }         
@@ -246,14 +312,18 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
         </Badge>
       </Affix>
         </Layout>
-     
     </Layout>
     
   );
 }
 
+function componentDidMount () {
+    var container = React.findDOMNode(this);
+    dragula([container]);
+  }
+
 function mapStateToProps(state) {
-  const { shop, categorys, goods,items,select,collapsed,modal2Visible,modal2ErrMsg,modal1Visible,modal1ErrMsg,action } = state.shop;
+  const { shop, categorys, goods,items,select,collapsed,modal2Visible,modal2ErrMsg,modal1Visible,modal3Visible,modal1ErrMsg,action } = state.shop;
   const {totalCount} = state.cart;
   return {
     // loading: state.loading.models.users,
@@ -266,6 +336,7 @@ function mapStateToProps(state) {
     collapsed,
     modal2Visible,
     modal1Visible,
+    modal3Visible,
     modal2ErrMsg,
     modal1ErrMsg,
     action,

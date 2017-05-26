@@ -18,3 +18,7 @@ export const STEPS = [{
   title: '评价',
   content: '已评价',
 }];
+
+const getHost = env=>env==='prod'?'https://www.starstech.tech:3300/':'http://localhost:3300/' 
+
+export const HOST = getHost('test');

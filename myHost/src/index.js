@@ -8,6 +8,8 @@ const app = dva({
 
 app.model(require("./models/shop"));
 
+app.model(require("./models/editgood")); 
+
 app.model(require("./models/basket"));
 
 app.model(require("./models/order"));
