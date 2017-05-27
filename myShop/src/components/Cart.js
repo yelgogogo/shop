@@ -75,6 +75,10 @@ function Cart({dispatch,goods,totalPrice,payMode}) {
     functionIn(id,1);
   }
 
+  function sendOrder(){
+    
+  }
+
   function callback(key) {
     console.log(key);
     switch (key){
@@ -130,7 +134,7 @@ function Cart({dispatch,goods,totalPrice,payMode}) {
         </span>
         
         <span style={{ width: '40%'   }}>
-        <Button type="primary" style={{  right: '0px',    position: 'absolute'  }}>提交</Button>
+        <Button type="primary" onClick={sendOrder.bind(null)} style={{  right: '0px', position: 'absolute'}}>提交</Button>
         </span>
     
       </Footer>

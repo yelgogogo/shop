@@ -64,7 +64,7 @@ class PicturesWall extends React.Component {
   }
 
   render() {
-
+    const uploadPath=`${HOST}upload`
     const { previewVisible, previewImage, fileList } = this.state;
     const uploadButton = (
       <div>
@@ -75,7 +75,7 @@ class PicturesWall extends React.Component {
     return (
       <div className="clearfix">
         <Upload
-          action="//localhost:3300/upload"
+          action={uploadPath}
           listType="picture-card"
           fileList={fileList}
           onPreview={this.handlePreview}

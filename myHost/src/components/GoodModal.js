@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Form, Input,Radio,InputNumber } from 'antd';
 import PicturesWall from './PicturesWall';
+import {doDiscount} from '../constants'
 // import styles from './GoodModal.css';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -30,7 +31,10 @@ class UserEditModal extends Component {
 
   okHandler = () => {
     const { onOk } = this.props;
+    const x=doDiscount(this.props.form.getFieldValue('price'),this.props.form.getFieldValue('discount'));
+    this.props.form.setFieldsValue({discountPrice:x});
     this.props.form.validateFields((err, values) => {
+      
       if (!err) {
         onOk(values);
         this.hideModelHandler();
@@ -38,10 +42,12 @@ class UserEditModal extends Component {
     });
   };
 
-  showChange = (e) => {
-    console.log(this.props);
-    console.log(e);
-  };
+  // priceDiscount = (p,d) => {
+  //    console.log(this.props);
+  //    console.log(this.state);
+  //     //this.props.form.setFieldsValue({discountPrice:doDiscount(p,d)}) 
+  //     console.log(doDiscount(p,d));
+  //   };
 
   // function showChange(e){
   //   console.log(e);
@@ -56,21 +62,27 @@ class UserEditModal extends Component {
       wrapperCol: { span: 14 },
     };
 
+    
     return (
       <span>
         <span onClick={this.showModelHandler}>
           { children }
         </span>
         <Modal
-          title="Edit User"
+          title="商品编辑"
           visible={this.state.visible}
           onOk={this.okHandler}
           onCancel={this.hideModelHandler}
         >
           <Form horizontal onSubmit={this.okHandler}>
+            {getFieldDecorator('categoryId', {initialValue: categoryId,})(<div />)}
+            {getFieldDecorator('shopId', {initialValue: shopId,})(<div />)}
+            {getFieldDecorator('shopName', {initialValue: shopName,})(<div />)}
+            {getFieldDecorator('id', {initialValue: id,})(<div />)}        
+            {getFieldDecorator('discountPrice', {initialValue: discountPrice,})(<div />)}  
             <FormItem
               {...formItemLayout}
-              label="Name"
+              label="商品名称"
             >
               {
                 getFieldDecorator('name', {
@@ -80,7 +92,7 @@ class UserEditModal extends Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="unit"
+              label="单位"
             >
               {
                 getFieldDecorator('unit', {
@@ -91,37 +103,27 @@ class UserEditModal extends Component {
           
             <FormItem
               {...formItemLayout}
-              label="itemId"
+              label="所属分类"
             >
               {
                 getFieldDecorator('itemId', {
                   initialValue: itemId,
-                })(<InputNumber />)
+                })(<InputNumber disabled={true}/>)
               }
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="categoryId"
-            >
-              {
-                getFieldDecorator('categoryId', {
-                  initialValue: categoryId,
-                })(<InputNumber />)
-              }
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="sold"
+              label="已售出"
             >
               {
                 getFieldDecorator('sold', {
                   initialValue: sold,
-                })(<InputNumber />)
+                })(<InputNumber disabled={true}/>)
               }
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="detail"
+              label="详情"
             >
               {
                 getFieldDecorator('detail', {
@@ -131,7 +133,7 @@ class UserEditModal extends Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="price"
+              label="价格"
             >
               {
                 getFieldDecorator('price', {
@@ -141,7 +143,7 @@ class UserEditModal extends Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="cost"
+              label="成本"
             >
               {
                 getFieldDecorator('cost', {
@@ -151,7 +153,7 @@ class UserEditModal extends Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="stock"
+              label="库存"
             >
               {
                 getFieldDecorator('stock', {
@@ -161,26 +163,18 @@ class UserEditModal extends Component {
             </FormItem>
             <FormItem
               {...formItemLayout}
-              label="discount"
+              label="折扣"
             >
               {
                 getFieldDecorator('discount', {
                   initialValue: discount,
+                  // onChange:this.priceDiscount(price,discount),
                 })(<InputNumber />)
               }
             </FormItem>
+            <div>折扣价格:{doDiscount(this.props.form.getFieldValue('price'),this.props.form.getFieldValue('discount'))}</div>
             <FormItem
-              {...formItemLayout}
-              label="discountPrice"
-            >
-              {
-                getFieldDecorator('discountPrice', {
-                  initialValue: discountPrice,
-                })(<InputNumber />)
-              }
-            </FormItem>
-            <FormItem
-              label="Images"
+              label="图片"
             >
               { 
                 getFieldDecorator('imgUrl', {
@@ -193,8 +187,8 @@ class UserEditModal extends Component {
               initialValue: true,
             })(
               <RadioGroup>
-                <Radio value={true}>Public</Radio>
-                <Radio value={false}>Private</Radio>
+                <Radio value={true}>销售中</Radio>
+                <Radio value={false}>下架</Radio>
               </RadioGroup>
             )}
           </FormItem>

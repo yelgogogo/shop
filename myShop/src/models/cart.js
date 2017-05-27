@@ -1,7 +1,9 @@
+import {HOST} from '../constants'
 
 export default {
   namespace: 'cart',
   state: {
+    id:0,
   	userId: 0,
   	userName: null,
   	shopId: 0,
@@ -11,6 +13,11 @@ export default {
   	goods:[
 
   	],
+    action:{
+      operCode:'add',
+      type:null,
+      values:null,
+    },
   },
   reducers: {
   	saveGoods(state, { payload: { data: {goods } }}) {
@@ -24,11 +31,68 @@ export default {
     changePaymode(state, { payload: { payMode }}) {
       return { ...state, payMode};
     },
+    saveUser(state, { payload: { data:user }}) {
+      console.log({ payload: { data:user }});
+      return { ...state, userId:user.id,userName:user.nickname};
+    },
+    saveAction(state, { payload: { action} } ) {
+      return { ...state, action};
+    },
   },
   effects: {
-
+    *add({ payload: xy }, { call, put,select }) {
+      const cart = yield select(state => state.cart);
+      const { data, headers } = yield call(shopService.add, { action });
+      console.log(data);
+      if (data[action.type].on_err){
+        yield put({
+          type: 'setModal2Visible',
+          payload: {
+            modal2Visible:true,
+            modal2ErrMsg:data[action.type].err_msg,
+          },
+        });
+      }else{
+        yield put({
+          type: `${action.type}Save`,
+          payload: {
+            data,
+          },
+        });
+        yield put({
+          type: 'setModal2Visible',
+          payload: {
+            modal2Visible:false,
+          },
+        });
+      }
+    },
   },
   subscriptions: {
-
+    setup({ dispatch, history }) {
+      return history.listen(({ pathname, query }) => { 
+        console.log(pathname );
+        if (pathname === '/cart' ) {
+          dispatch({ type: 'saveUser', payload: {code:query.code?query.code:'',data:getuser()} });
+        }
+      });
+    },
   },
 };
+
+
+function getuser(){
+  let user={};
+  if(localStorage.getItem('shop_user') ){
+    user=JSON.parse(localStorage.getItem('shop_user'));
+  }else{
+    user.id=Date.now();
+    user.avatar="https://www.starstech.tech:3201/uploads/defaultuser.jpg";
+    user.badge=0;
+    user.openid=null;
+    user.nickname='访客';
+    let body = JSON.stringify(user);
+    localStorage.setItem('shop_user', body);
+  }
+  return user;
+}

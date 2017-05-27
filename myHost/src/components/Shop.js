@@ -168,14 +168,13 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
 
   function editHandler(typeIn,operCodeIn,action,values) {
     console.log(typeIn,action,values);
-    console.log({...values,shopId:shop.id});
     dispatch({
       type: 'shop/saveAction',
       payload: {
         action:{
           operCode:operCodeIn,
           type:typeIn,
-          values:{...values,shopId:shop.id,shopName:shop.shopName},
+          values,
         },
       },
     });
@@ -275,12 +274,12 @@ function Shop({dispatch,shop, categorys, goods,items,select,collapsed,totalCount
           {
             goods.map(function (good) {
               console.log(good);
-              console.log(good.onSale,good.shopId,shop.id,good.itemId,select.itemId);
               const linkPath="/good/"+good.id;
-            return (good.onSale&&good.shopId===shop.id&&good.itemId===select.itemId)?
+            return (good.shopId===shop.id&&good.itemId===select.itemId)?
             <Col span={12} key={good.id}>
               <Link to={linkPath}>
               <Card bodyStyle={{ padding: 0 }} >
+
                 <GoodModal record={good} onOk={editHandler.bind(null,'goods','modify',action)}>
                   <Button onClick={enterGoodModal}>编辑商品</Button>
                 </GoodModal>
