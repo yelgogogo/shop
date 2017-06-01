@@ -1,4 +1,5 @@
-import {HOST} from '../constants'
+import {HOST} from '../constants';
+import * as shopService from '../services/shopService'; 
 
 export default {
   namespace: 'cart',
@@ -10,6 +11,7 @@ export default {
   	totalPrice: 0,
   	totalCount: 0,
     payMode:'offline',
+    status: 0,
   	goods:[
 
   	],
@@ -38,33 +40,55 @@ export default {
     saveAction(state, { payload: { action} } ) {
       return { ...state, action};
     },
+    ordersSave(state, { payload: { data: {orders } }}) {
+      return { ...state, ...orders};
+    }
+
   },
   effects: {
     *add({ payload: xy }, { call, put,select }) {
-      const cart = yield select(state => state.cart);
+      const action = yield select(state => state.cart.action);
       const { data, headers } = yield call(shopService.add, { action });
       console.log(data);
       if (data[action.type].on_err){
-        yield put({
-          type: 'setModal2Visible',
-          payload: {
-            modal2Visible:true,
-            modal2ErrMsg:data[action.type].err_msg,
-          },
-        });
+        // yield put({
+        //   type: 'setModal2Visible',
+        //   payload: {
+        //     modal2Visible:true,
+        //     modal2ErrMsg:data[action.type].err_msg,
+        //   },
+        // });
       }else{
+        const initValue={
+    id:0,
+    userId: 0,
+    userName: null,
+    shopId: 0,
+    totalPrice: 0,
+    totalCount: 0,
+    status: 0,
+    payMode:'offline',
+    goods:[
+
+    ],
+    action:{
+      operCode:'add',
+      type:null,
+      values:null,
+    },
+  };
         yield put({
           type: `${action.type}Save`,
           payload: {
-            data,
+            data:{orders:initValue},
           },
         });
-        yield put({
-          type: 'setModal2Visible',
-          payload: {
-            modal2Visible:false,
-          },
-        });
+        // yield put({
+        //   type: 'setModal2Visible',
+        //   payload: {
+        //     modal2Visible:false,
+        //   },
+        // });
       }
     },
   },

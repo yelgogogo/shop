@@ -12,7 +12,7 @@ const RadioGroup = Radio.Group;
 const { Header, Footer, Sider, Content } = Layout;
 const TabPane = Tabs.TabPane;
 
-function Cart({dispatch,goods,totalPrice,payMode}) {
+function Cart({dispatch,goods,totalPrice,payMode,cart,shopId,userId}) {
 
   const menu = (
 	<Menu>
@@ -75,15 +75,30 @@ function Cart({dispatch,goods,totalPrice,payMode}) {
     functionIn(id,1);
   }
 
-  function sendOrder(){
-    
+  function sendOrder(typeIn,obj){
+    const {action,...setValues}=obj;
+    dispatch({ 
+      type: 'cart/saveAction', 
+      payload: {
+        action:{
+          operCode:'add',
+          type:typeIn,
+          values:setValues,
+        },
+      }, 
+    });
+
+    dispatch({ 
+      type: 'cart/add', 
+      payload: {}, 
+    });
   }
 
   function callback(key) {
     console.log(key);
     switch (key){
       case 'basket' :
-        dispatch({ type: 'basket/fetch', payload: {} });
+        dispatch({ type: 'basket/fetch', payload: {userId,type:'orders'} });
         break; 
     }
   }
@@ -134,7 +149,7 @@ function Cart({dispatch,goods,totalPrice,payMode}) {
         </span>
         
         <span style={{ width: '40%'   }}>
-        <Button type="primary" onClick={sendOrder.bind(null)} style={{  right: '0px', position: 'absolute'}}>提交</Button>
+        <Button type="primary" onClick={sendOrder.bind(null,'orders',cart)} style={{  right: '0px', position: 'absolute'}}>提交</Button>
         </span>
     
       </Footer>
@@ -153,9 +168,10 @@ function Cart({dispatch,goods,totalPrice,payMode}) {
 
 function mapStateToProps(state) {
   const { userId,userName,shopId,totalPrice,totalCount,goods,payMode} = state.cart;
+  const cart = state.cart;
   return {
     // loading: state.loading.models.users,
-    userId,userName,shopId,totalPrice,totalCount,goods,payMode
+    userId,userName,shopId,totalPrice,totalCount,goods,payMode,cart,
   };
 }
 

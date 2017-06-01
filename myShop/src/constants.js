@@ -21,4 +21,4 @@ export const STEPS = [{
 
 const getHost = env=>env==='prod'?'http://www.starstech.tech:3300/':'http://localhost:3300/' 
 
-export const HOST = getHost('test');
+export const HOST = getHost('prod');
