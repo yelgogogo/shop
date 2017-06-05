@@ -1,12 +1,13 @@
 import React from 'react';
-import styles from './Basket.css';
+
 import { connect } from 'dva';
-import { Button,Icon,Layout,Steps,Card } from 'antd';
+import { Button, Layout, Steps, Card } from 'antd';
 import {STEPS} from '../constants';
+import styles from './Basket.css';
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Footer, Content } = Layout;
 
-function Basket({dispatch,action,orders,goods}) {
+function Basket({ dispatch, action, orders, goods }) {
   function goBack(){
     history.back();
   }
@@ -21,16 +22,17 @@ function Basket({dispatch,action,orders,goods}) {
 
   // }
 
-  function changeStatus(order,typein,statusin){
+  function changeStatus(order, typein, statusin) {
     console.log(order);
     dispatch({
       type: 'basket/saveAction',
       payload: {
-        action:{...action,
-          type:typein,
-          values:{
-          id:order.id,
-          status:statusin,
+        action: {
+          ...action,
+          type: typein,
+          values: {
+            id: order.id,
+            status: statusin,
           }
         },
       },
@@ -78,7 +80,7 @@ function Basket({dispatch,action,orders,goods}) {
                     <p>¥{order.totalPrice}</p>
                     <p>{STEPS[order.status].content}</p>
 				    				<p>logistics info</p>
-                    <Button icon="shopping-cart" onClick={changeStatus.bind(null,order,'orders',5)}>+</Button>
+                    <Button icon="check-circle-o" onClick={changeStatus.bind(null,order,'orders',5)}>交易完成</Button>
 				    			</Footer>
 				    		</Layout>
 				  		</Card>

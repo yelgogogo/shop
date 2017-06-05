@@ -29,7 +29,6 @@ export default {
       const orders =data.orders.filter(o=>o.status!==5);
       let goods=[];
       orders.forEach(ord => {
-        // let ord = data.orders;
         goods = ord.goods.map(g=>{g.orderId=ord.id; return g}).concat(goods);
         }
       )

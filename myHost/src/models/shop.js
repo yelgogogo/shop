@@ -67,7 +67,8 @@ export default {
   },
   effects: {
   	*fetch({ payload: { id } }, { call, put }) {
-      const { data, headers } = yield call(shopService.loadAll, { shop:{},categorys:{},items:{},goods:{} });
+      const shopId=id;
+      const { data, headers } = yield call(shopService.loadAll, { shop:{id},categorys:{shopId},items:{shopId},goods:{shopId} });
       console.log(data);
       data.shop=data.shop[0];
       // const data = JSON.parse(
@@ -170,7 +171,7 @@ export default {
       return history.listen(({ pathname, query }) => {
         const match = pathToRegexp('/shop/:id').exec(pathname);
         if (match) {
-          const id = match[1];
+          const id = parseInt(match[1]);
           dispatch({ type: 'fetch', payload: {id} });
         }
         // if (pathname === '/shop') {
