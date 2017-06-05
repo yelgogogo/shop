@@ -1,7 +1,7 @@
 import * as shopService from '../services/shopService'; 
 
 export default {
-  namespace: 'basket',
+  namespace: 'trans',
   state: {
   	orders:[],
   	goods:[],
@@ -15,18 +15,15 @@ export default {
   	save(state, { payload: { data: {info,orders,goods } }}) {
       return { ...state,info,orders,goods};
     },
-    saveAction(state, { payload: { action} } ) {
-      return { ...state, action};
-    },
   },
   effects: {
-  	*fetch({ payload: { shopId, type} }, { call, put }) {
+  	*fetch({ payload: { shopId,status, type} }, { call, put }) {
       // let orders={};
       // orders[type]={shopId}
-  	  const { data, headers } = yield call(shopService.loadAll, { orders:{shopId}});
+  	  const { data, headers } = yield call(shopService.loadAll, { orders:{shopId,status}});
       console.log(data);
       // const orders = data.orders.map(o=>{delete o.goods; return o});
-      const orders =data.orders.filter(o=>o.status!==5);
+      const orders =data.orders
       let goods=[];
       orders.forEach(ord => {
         // let ord = data.orders;
@@ -45,40 +42,7 @@ export default {
 		  	},
 		  });
 		},
-    *modify({ payload: { xy} }, { call, put,select }) {
-      const action = yield select(state => state.basket.action);
-      const { data, headers } = yield call(shopService.modify, { action }); 
-      console.log(data); 
-      if (data[action.type].on_err){
-        // yield put({
-        //   type: 'setModal1Visible',
-        //   payload: {
-        //     modal1Visible:true,
-        //     modal1ErrMsg:data[action.type].err_msg,
-        //   },
-        // });
-      }else{
-        const orders =data.orders.filter(o=>o.status!==5);
-        let goods=[];
-        orders.forEach(ord => {
-          // let ord = data.orders;
-          goods = ord.goods.map(g=>{g.orderId=ord.id; return g}).concat(goods);
-          }
-        )
-        yield put({
-          type: 'save',
-          payload: {
-            data:{orders,goods},
-          },
-        });
-        // yield put({
-        //   type: 'setModal1Visible',
-        //   payload: {
-        //     modal1Visible:false,
-        //   },
-        // });
-      }
-    },
+
   },
   subscriptions: {
   	setup({ dispatch, history }) {
@@ -88,7 +52,7 @@ export default {
         //   const id = match[1];
         //   dispatch({ type: 'fetch', payload: {id} });
         // }
-        if (pathname === '/basket') {
+        if (pathname === '/trans') {
           dispatch({ type: 'fetch', payload: query });
         }
       });

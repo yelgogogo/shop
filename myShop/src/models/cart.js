@@ -60,10 +60,10 @@ export default {
         // });
       }else{
         const initValue={
-    id:0,
-    userId: 0,
-    userName: null,
-    shopId: 0,
+    // id:0,
+    // userId: 0,
+    // userName: null,
+    // shopId: 0,
     totalPrice: 0,
     totalCount: 0,
     status: 0,

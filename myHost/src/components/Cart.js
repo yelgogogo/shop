@@ -5,6 +5,7 @@ import { Table } from 'antd';
 import { Menu, Dropdown, Button,Icon,Layout,Radio,Tabs   } from 'antd';
 import { Link } from 'dva/router';
 import BasketComponent from './Basket';
+import TransComponent from './Trans';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -12,7 +13,7 @@ const RadioGroup = Radio.Group;
 const { Header, Footer, Sider, Content } = Layout;
 const TabPane = Tabs.TabPane;
 
-function Cart({dispatch,goods,totalPrice,payMode}) {
+function Cart({dispatch,goods,totalPrice,payMode,shopId}) {
 
   const menu = (
 	<Menu>
@@ -79,8 +80,11 @@ function Cart({dispatch,goods,totalPrice,payMode}) {
     console.log(key);
     switch (key){
       case 'basket' :
-        dispatch({ type: 'basket/fetch', payload: {} });
+        dispatch({ type: 'basket/fetch', payload: {shopId,type:'orders'} });
         break; 
+      case 'trans' :
+        dispatch({ type: 'trans/fetch', payload: {shopId,status:5,type:'orders'} });
+        break;
     }
   }
 
@@ -139,7 +143,9 @@ function Cart({dispatch,goods,totalPrice,payMode}) {
     <TabPane tab="交易中" key="basket">
       <BasketComponent />
     </TabPane>
-    <TabPane tab="已完成" key="3">Content of Tab Pane 3</TabPane>
+    <TabPane tab="已完成" key="trans">
+      <TransComponent />
+    </TabPane>
     </Tabs>
     </Content>
     </Layout>

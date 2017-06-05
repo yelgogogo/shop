@@ -1,47 +1,14 @@
 import React from 'react';
-import styles from './Basket.css';
+import styles from './Trans.css';
 import { connect } from 'dva';
 import { Button,Icon,Layout,Steps,Card } from 'antd';
 import {STEPS} from '../constants';
 
 const { Header, Footer, Sider, Content } = Layout;
 
-function Basket({dispatch,action,orders,goods}) {
+function Trans({info,orders,goods}) {
   function goBack(){
     history.back();
-  }
-
-  // function doAction(action){
-  //   dispatch({
-  //     type: `basket/${action.operCode}`,
-  //     payload: {
-  //       action
-  //     },
-  //   });
-
-  // }
-
-  function changeStatus(order,typein,statusin){
-    console.log(order);
-    dispatch({
-      type: 'basket/saveAction',
-      payload: {
-        action:{...action,
-          type:typein,
-          values:{
-          id:order.id,
-          status:statusin,
-          }
-        },
-      },
-    });
-
-    dispatch({
-      type: `basket/${action.operCode}`,
-      payload: {
-        action
-      },
-    });
   }
 
   return (
@@ -68,7 +35,6 @@ function Basket({dispatch,action,orders,goods}) {
 				    							<span style={{ padding: '5px' }}>¥{fg.discountPrice}<br />x {fg.count}</span>
 				    							<span ></span>
                           </div>
-
 				    						</Card>
 				    					)
 				    				}
@@ -78,7 +44,6 @@ function Basket({dispatch,action,orders,goods}) {
                     <p>¥{order.totalPrice}</p>
                     <p>{STEPS[order.status].content}</p>
 				    				<p>logistics info</p>
-                    <Button icon="shopping-cart" onClick={changeStatus.bind(null,order,'orders',5)}>+</Button>
 				    			</Footer>
 				    		</Layout>
 				  		</Card>
@@ -95,11 +60,11 @@ function Basket({dispatch,action,orders,goods}) {
 }
 
 function mapStateToProps(state) {
-  const { action,orders,goods} = state.basket;
+  const { info,orders,goods} = state.trans;
   return {
     // loading: state.loading.models.users,
-    action,orders,goods
+    info,orders,goods
   };
 }
 
-export default connect(mapStateToProps)(Basket);
+export default connect(mapStateToProps)(Trans);

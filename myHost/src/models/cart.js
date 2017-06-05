@@ -2,15 +2,22 @@
 export default {
   namespace: 'cart',
   state: {
+    id:0,
   	userId: 0,
   	userName: null,
   	shopId: 0,
   	totalPrice: 0,
   	totalCount: 0,
     payMode:'offline',
+    status: 0,
   	goods:[
 
   	],
+    action:{
+      operCode:'add',
+      type:null,
+      values:null,
+    },
   },
   reducers: {
   	saveGoods(state, { payload: { data: {goods } }}) {
